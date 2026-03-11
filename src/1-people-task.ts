@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { parse } from "csv-parse/sync";
 import Anthropic from "@anthropic-ai/sdk";
@@ -8,11 +8,9 @@ import { zodOutputFormat } from "@anthropic-ai/sdk/helpers/zod";
 import { config } from "./config.js";
 import type { PersonRecord, PersonAnswer } from "./types.js";
 import { JOB_TAGS } from "./types.js";
+import { HUB_API_KEY, hubVerify } from "./hub.js";
 
-const HUB_API_KEY = process.env.HUB_API_KEY ?? "";
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY ?? "";
-
-const VERIFY_URL = config.hub.verify_url;
 
 /** Konfiguracja specyficzna dla zadania people */
 const peopleConfig = {
@@ -150,24 +148,6 @@ function buildAnswer(people: PersonRecord[], tagMap: Map<number, string[]>): Per
   return result;
 }
 
-async function sendVerify(apikey: string, answer: PersonAnswer[]): Promise<unknown> {
-  const answerArray = Array.isArray(answer) ? answer : [];
-  const payload = { apikey, task: "people", answer: answerArray };
-  const res = await fetch(VERIFY_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-  const text = await res.text();
-  if (!res.ok) {
-    throw new Error(`Verify failed: ${res.status} ${text}`);
-  }
-  try {
-    return JSON.parse(text) as unknown;
-  } catch {
-    return { raw: text };
-  }
-}
 
 async function main(): Promise<void> {
   if (!HUB_API_KEY || !ANTHROPIC_API_KEY) {
@@ -185,7 +165,7 @@ async function main(): Promise<void> {
 
   if (filtered.length === 0) {
     console.log("Brak osób do otagowania. Wysyłam pustą odpowiedź.");
-    const response = await sendVerify(HUB_API_KEY, []);
+    const response = await hubVerify("people", []);
     console.log("Odpowiedź:", JSON.stringify(response, null, 2));
     return;
   }
@@ -197,7 +177,11 @@ async function main(): Promise<void> {
   const answer = buildAnswer(filtered, tagMap);
   console.log(`Osób z tagiem 'transport': ${answer.length}.`);
 
-  const response = await sendVerify(HUB_API_KEY, answer);
+  const suspectsPath = join(process.cwd(), "src/data/suspects.json");
+  await writeFile(suspectsPath, JSON.stringify(answer, null, 2), "utf-8");
+  console.log(`Zapisano listę podejrzanych do ${suspectsPath}.`);
+
+  const response = await hubVerify("people", answer);
   console.log("Odpowiedź z Hub:", JSON.stringify(response, null, 2));
 }
 

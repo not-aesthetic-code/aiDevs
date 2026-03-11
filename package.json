@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "people": "tsx src/people-task.ts",
+    "people": "tsx src/1-people-task.ts",
+    "findhim": "tsx src/2-find-him.ts",
     "build": "tsc"
   },
   "dependencies": {
