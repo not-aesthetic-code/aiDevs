@@ -6,6 +6,7 @@
   "scripts": {
     "people": "tsx src/1-people-task.ts",
     "findhim": "tsx src/2-find-him.ts",
+    "proxy": "tsx src/3-mcp-ts",
     "build": "tsc"
   },
   "dependencies": {
