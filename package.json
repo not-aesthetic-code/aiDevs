@@ -6,11 +6,13 @@
   "scripts": {
     "people": "tsx src/1-people-task.ts",
     "findhim": "tsx src/2-find-him.ts",
-    "proxy": "tsx src/3-mcp-ts",
+    "proxy": "tsx src/3-mcp-ts/index.ts",
+    "sendit": "tsx src/4-find-parcel/4-findParcel.ts",
     "build": "tsc"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",
+    "@modelcontextprotocol/sdk": "^1.27.1",
     "csv-parse": "^5.5.6",
     "dotenv": "^16.4.5",
     "zod": "^4.0.0"
