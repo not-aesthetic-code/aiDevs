@@ -1,0 +1,11 @@
+{
+  "label": "People",
+  "description": "Filter CSV data and classify people using LLM structured output with Zod schemas.",
+  "type": "run-once",
+  "steps": [
+    { "id": "load",   "label": "Load CSV data",       "detail": "Fetch people records from Hub API",                      "usesLLM": false, "icon": "🌐" },
+    { "id": "filter", "label": "Filter records",       "detail": "Apply age, city, and industry filters",                  "usesLLM": false, "icon": "🔍" },
+    { "id": "tag",    "label": "Tag jobs with LLM",    "detail": "Classify job categories using structured output",        "usesLLM": true,  "icon": "🤖" },
+    { "id": "verify", "label": "Submit answer",        "detail": "Verify result with Hub",                                 "usesLLM": false, "icon": "✅" }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "label": "Railway",
+  "description": "Interact with the Railway system API (SPK) to configure route X-01 Gdańsk–Żarnowiec.",
+  "type": "run-once",
+  "steps": [
+    { "id": "help",    "label": "Get system info",    "detail": "Query SPK system for available commands",    "usesLLM": false, "icon": "🌐" },
+    { "id": "reconfig","label": "Reconfigure route",  "detail": "Set route X-01 parameters",                  "usesLLM": false, "icon": "⚙️" },
+    { "id": "status",  "label": "Set RTOPEN status",  "detail": "Activate the route with open status",         "usesLLM": false, "icon": "🔁" },
+    { "id": "save",    "label": "Save changes",        "detail": "Persist configuration to SPK system",        "usesLLM": false, "icon": "✅" }
+  ]
+}

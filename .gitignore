@@ -3,3 +3,12 @@ dist/
 .env
 *.log
 .DS_Store
+
+# Local tool settings
+.claude/
+
+# Hub UI settings (may contain API keys)
+hub/settings.json
+
+# Task outputs / answers — do not publish
+hub/tasks/shared/data/suspects.json

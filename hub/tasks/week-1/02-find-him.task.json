@@ -1,0 +1,11 @@
+{
+  "label": "Find Him",
+  "description": "Detective agent using function calling to locate a suspect near a nuclear power plant.",
+  "type": "run-once",
+  "steps": [
+    { "id": "suspects", "label": "Load suspects",      "detail": "Read suspects list from JSON file",                        "usesLLM": false, "icon": "📂" },
+    { "id": "plants",   "label": "Get power plants",   "detail": "Fetch and geocode nuclear power plants via OSM",           "usesLLM": false, "icon": "🌐" },
+    { "id": "agent",    "label": "Run detective agent", "detail": "Multi-step function calling to find and identify suspect", "usesLLM": true,  "icon": "🤖" },
+    { "id": "verify",   "label": "Submit answer",       "detail": "Verify final answer with Hub",                            "usesLLM": false, "icon": "✅" }
+  ]
+}

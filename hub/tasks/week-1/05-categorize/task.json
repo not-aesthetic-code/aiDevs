@@ -1,0 +1,11 @@
+{
+  "label": "Categorize",
+  "description": "Engineer an optimal prompt to classify dangerous vs. neutral goods within a strict budget.",
+  "type": "run-once",
+  "steps": [
+    { "id": "fetch",    "label": "Fetch items",       "detail": "Load categorization dataset from Hub",                              "usesLLM": false, "icon": "🌐" },
+    { "id": "engineer", "label": "Engineer prompt",   "detail": "Use Claude Opus to create an optimal classifier prompt",            "usesLLM": true,  "icon": "🤖" },
+    { "id": "classify", "label": "Classify items",    "detail": "Apply engineered prompt to all items",                              "usesLLM": true,  "icon": "🏷️" },
+    { "id": "verify",   "label": "Verify results",    "detail": "Check each classification with Hub",                                "usesLLM": false, "icon": "✅" }
+  ]
+}

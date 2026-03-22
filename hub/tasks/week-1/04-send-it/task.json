@@ -1,0 +1,11 @@
+{
+  "label": "Send It",
+  "description": "Extract route from an image using Claude Vision and fill a railway declaration.",
+  "type": "run-once",
+  "steps": [
+    { "id": "fetch",   "label": "Fetch document",     "detail": "Download railway document image from Hub",                "usesLLM": false, "icon": "🌐" },
+    { "id": "vision",  "label": "Extract route code",  "detail": "Use Claude Vision to read route code from image",        "usesLLM": true,  "icon": "👁️" },
+    { "id": "declare", "label": "Build declaration",   "detail": "Construct SPK declaration with route and mass",          "usesLLM": false, "icon": "📄" },
+    { "id": "submit",  "label": "Submit declaration",  "detail": "Send declaration to Hub for verification",               "usesLLM": false, "icon": "✅" }
+  ]
+}

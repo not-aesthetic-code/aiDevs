@@ -8,7 +8,9 @@
     "findhim": "tsx src/2-find-him.ts",
     "proxy": "tsx src/3-mcp-ts/index.ts",
     "sendit": "tsx src/4-find-parcel/4-findParcel.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "hub": "cd hub && npm run dev",
+    "hub:install": "cd hub && npm install"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.78.0",

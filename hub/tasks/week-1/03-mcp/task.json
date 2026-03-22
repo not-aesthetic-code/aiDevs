@@ -1,0 +1,10 @@
+{
+  "label": "MCP Parcel",
+  "description": "Model Context Protocol server for intelligent parcel routing with a secret mission.",
+  "type": "server",
+  "steps": [
+    { "id": "mcp",   "label": "Start MCP server",  "detail": "Initialize Model Context Protocol server via stdio",            "usesLLM": false, "icon": "⚙️" },
+    { "id": "http",  "label": "Start HTTP server",  "detail": "Listen for parcel requests on port 3000",                      "usesLLM": false, "icon": "🌐" },
+    { "id": "route", "label": "Route parcels",      "detail": "Process packages using LLM decisions with secret override",    "usesLLM": true,  "icon": "🤖" }
+  ]
+}
