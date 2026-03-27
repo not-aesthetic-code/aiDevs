@@ -48,6 +48,11 @@ export function appendLog(job: JobState, line: LogLine): void {
       }
     }
   }
+
+  const tokenMatch = line.text.match(/\[TOKENS:(\d+)\]/);
+  if (tokenMatch) {
+    broadcast(job, 'token_count', { count: parseInt(tokenMatch[1], 10) });
+  }
 }
 
 export function finishJob(job: JobState, exitCode: number): void {

@@ -1,0 +1,13 @@
+{
+  "label": "Electricity",
+  "description": "Analyze electrical circuit diagrams by cutting them into 9 tiles and comparing initial vs solved states using a chosen LLM.",
+  "type": "run-once",
+  "steps": [
+    { "id": "reset",    "label": "Reset board",            "detail": "Start from a known initial state",                          "usesLLM": false, "icon": "🔄" },
+    { "id": "localize", "label": "Localize grid",          "detail": "Determine the bounding box of the 3×3 grid in the image",   "usesLLM": false, "icon": "📐" },
+    { "id": "cut",      "label": "Cut into tiles",         "detail": "Extract 9 individual tiles from both the current and target images", "usesLLM": false, "icon": "✂️" },
+    { "id": "compare",  "label": "Compare tile pairs",     "detail": "For each position send the current and target tile to a vision model", "usesLLM": true,  "icon": "🤖" },
+    { "id": "rotate",   "label": "Send rotations to hub",  "detail": "Apply the required rotations one by one via the hub API",   "usesLLM": false, "icon": "🔁" },
+    { "id": "verify",   "label": "Verify and repeat",      "detail": "Fetch the updated board and repeat until the flag is returned", "usesLLM": false, "icon": "✅" }
+  ]
+}

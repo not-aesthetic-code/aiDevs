@@ -43,6 +43,14 @@ export function StatusBar({ task, job }: Props) {
           </span>
         </>
       )}
+      {job?.tokenCount !== null && job?.tokenCount !== undefined && (
+        <>
+          <span className="text-[#45475a]">·</span>
+          <span className={job.tokenCount <= 1500 ? 'text-[#a6e3a1]' : 'text-[#f38ba8]'}>
+            {job.tokenCount} / 1500 tokens
+          </span>
+        </>
+      )}
     </div>
   );
 }

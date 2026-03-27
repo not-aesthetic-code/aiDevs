@@ -11,7 +11,8 @@ interface Props {
 }
 
 export function TaskPanel({ task }: Props) {
-  const [showServices, setShowServices] = useState(false);
+  const [showServices, setShowServices] = useState(() => task.steps.some((s) => s.usesLLM));
+  const [stepModels, setStepModels] = useState<Record<string, string>>({});
   const { run, stop, clear, currentJob } = useTaskRunner(task.id);
 
   const isRunning = currentJob?.status === 'running';
@@ -67,7 +68,7 @@ export function TaskPanel({ task }: Props) {
             </button>
           ) : (
             <button
-              onClick={() => run()}
+              onClick={() => run(undefined, stepModels)}
               className="flex items-center gap-1.5 px-4 py-1.5 rounded text-xs font-semibold
                 bg-[#a6e3a1]/15 text-[#a6e3a1] border border-[#a6e3a1]/40 hover:bg-[#a6e3a1]/25 transition-colors"
             >
@@ -79,7 +80,7 @@ export function TaskPanel({ task }: Props) {
       </div>
 
       {/* Services panel (collapsible) */}
-      {showServices && <StepsPanel task={task} />}
+      {showServices && <StepsPanel task={task} stepModels={stepModels} onModelChange={(stepId, model) => setStepModels(prev => ({ ...prev, [stepId]: model }))} />}
 
       {/* Description (shown when no log output) */}
       {logLines.length === 0 && (

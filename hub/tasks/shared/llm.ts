@@ -12,6 +12,7 @@
  */
 
 import Anthropic from "@anthropic-ai/sdk";
+import { getOpenRouterChatCompletionsUrl, getOpenRouterHeaders } from "./openrouter.js";
 
 export interface Message {
   role: "user" | "assistant";
@@ -51,7 +52,6 @@ async function chatAnthropic(messages: Message[], opts: ChatOptions): Promise<st
 }
 
 async function chatOpenRouter(messages: Message[], opts: ChatOptions): Promise<string> {
-  const apiKey = process.env.OPENROUTER_API_KEY ?? "";
   const model = opts.model ?? process.env.OPENROUTER_MODEL ?? "anthropic/claude-haiku";
 
   const body: Record<string, unknown> = {
@@ -62,14 +62,9 @@ async function chatOpenRouter(messages: Message[], opts: ChatOptions): Promise<s
       : messages,
   };
 
-  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+  const res = await fetch(getOpenRouterChatCompletionsUrl(), {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-      "HTTP-Referer": "https://github.com/aidevs",
-      "X-Title": "aiDevs Hub",
-    },
+    headers: getOpenRouterHeaders(),
     body: JSON.stringify(body),
   });
 

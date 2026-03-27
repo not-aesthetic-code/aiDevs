@@ -8,7 +8,7 @@ import type { JobState } from '../types.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, '../../../');
 
-export function runTask(job: JobState, scriptPath: string, modelOverride?: string): void {
+export function runTask(job: JobState, scriptPath: string, modelOverride?: string, stepModels?: Record<string, string>): void {
   const settings = readSettings();
 
   const env: Record<string, string> = {
@@ -37,6 +37,12 @@ export function runTask(job: JobState, scriptPath: string, modelOverride?: strin
     env['MODEL_OVERRIDE'] = modelOverride;
   } else if (settings.models.default) {
     env['MODEL_OVERRIDE'] = settings.models.default;
+  }
+
+  if (stepModels) {
+    for (const [stepId, model] of Object.entries(stepModels)) {
+      if (model) env[`STEP_${stepId.toUpperCase()}_MODEL`] = model;
+    }
   }
 
   const child = spawn('npx', ['tsx', scriptPath], {

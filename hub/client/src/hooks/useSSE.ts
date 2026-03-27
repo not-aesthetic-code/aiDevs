@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useJobStore } from '../store/useJobStore.ts';
 
 export function useSSE(taskId: string | null, jobId: string | null) {
-  const { appendLog, addFlag, finishJob } = useJobStore();
+  const { appendLog, addFlag, setTokenCount, finishJob } = useJobStore();
   const esRef = useRef<EventSource | null>(null);
 
   useEffect(() => {
@@ -28,6 +28,13 @@ export function useSSE(taskId: string | null, jobId: string | null) {
       } catch { /* ignore */ }
     });
 
+    es.addEventListener('token_count', (e) => {
+      try {
+        const data = JSON.parse((e as MessageEvent).data);
+        setTokenCount(taskId, data.count);
+      } catch { /* ignore */ }
+    });
+
     es.addEventListener('done', (e) => {
       try {
         const data = JSON.parse((e as MessageEvent).data);
@@ -40,6 +47,8 @@ export function useSSE(taskId: string | null, jobId: string | null) {
 
     es.onerror = () => {
       es.close();
+      // Mark job as errored if SSE drops without a done event
+      if (taskId) finishJob(taskId, 1);
     };
 
     return () => {

@@ -31,6 +31,7 @@ export interface JobState {
   flags: string[];
   exitCode: number | null;
   startedAt: number | null;
+  tokenCount: number | null;
 }
 
 export interface Settings {

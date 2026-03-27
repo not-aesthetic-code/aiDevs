@@ -1,0 +1,10 @@
+{
+  "label": "Drone",
+  "description": "Program an armed drone to bomb the dam near Żarnowiec power plant by analyzing a satellite map with a vision model and iteratively submitting flight instructions via the hub API.",
+  "type": "run-once",
+  "steps": [
+    { "id": "analyze", "label": "Analyze map (vision)", "detail": "Send the satellite map to a vision model to locate the dam sector (column + row)", "usesLLM": true, "icon": "🗺️" },
+    { "id": "docs",    "label": "Fetch drone docs",    "detail": "Download the drone API documentation to identify available commands",             "usesLLM": false, "icon": "📄" },
+    { "id": "agent",   "label": "Agent loop",          "detail": "Build and submit flight instructions, iterate on hub feedback until flag",          "usesLLM": true,  "icon": "🤖" }
+  ]
+}

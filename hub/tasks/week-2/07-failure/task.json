@@ -1,0 +1,11 @@
+{
+  "label": "Failure",
+  "description": "Condense a large power-plant system log into ≤1500 tokens covering only failure-relevant events, then submit to the hub for engineer review.",
+  "type": "run-once",
+  "steps": [
+    { "id": "parse",    "label": "Parse log file",      "detail": "Scan failure.log and filter WARN/ERRO/CRIT entries — no LLM",     "usesLLM": false, "icon": "📂" },
+    { "id": "compress", "label": "Compress lines",      "detail": "LLM condenses all relevant events to fit within the 1500-token budget", "usesLLM": true,  "icon": "🤖" },
+    { "id": "count",    "label": "Count tokens",        "detail": "Estimate token count conservatively before submission",            "usesLLM": false, "icon": "🔢" },
+    { "id": "submit",   "label": "Submit to hub",       "detail": "POST condensed logs to /verify and display engineer feedback",     "usesLLM": false, "icon": "📤" }
+  ]
+}

@@ -108,7 +108,7 @@ export function LogOutput({ lines, flags }: Props) {
       ref={containerRef}
       className="flex-1 overflow-y-auto p-4 font-mono text-xs leading-5 bg-[#11111b]"
     >
-      {lines.length === 0 && (
+      {lines.length === 0 && flags.length === 0 && (
         <p className="text-[#45475a] italic">No output yet. Press Run to execute the task.</p>
       )}
       <div className="space-y-0.5">

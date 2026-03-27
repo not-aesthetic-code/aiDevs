@@ -1,3 +1,11 @@
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+// Load root .env so API keys are available to the server and child processes
+try {
+  process.loadEnvFile(resolve(dirname(fileURLToPath(import.meta.url)), '../../.env'));
+} catch { /* .env is optional */ }
+
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { serve } from '@hono/node-server';

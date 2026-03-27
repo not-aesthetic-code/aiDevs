@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useJobStore } from '../store/useJobStore.ts';
 import { useSSE } from './useSSE.ts';
 
@@ -10,15 +10,22 @@ export function useTaskRunner(taskId: string | null) {
   const clearJob = useJobStore((s) => s.clearJob);
   const currentJob = useJobStore((s) => (taskId ? s.jobs[taskId] : undefined));
 
+  // Recover activeJobId if component remounts while a job is still running
+  useEffect(() => {
+    if (currentJob?.status === 'running' && currentJob.jobId && !activeJobId) {
+      setActiveJobId(currentJob.jobId);
+    }
+  }, [currentJob?.status, currentJob?.jobId]);
+
   useSSE(taskId, activeJobId);
 
-  const run = async (modelOverride?: string) => {
+  const run = async (modelOverride?: string, stepModels?: Record<string, string>) => {
     if (!taskId) return;
 
     const res = await fetch(`/api/run/${taskId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ modelOverride }),
+      body: JSON.stringify({ modelOverride, stepModels }),
     });
 
     if (res.status === 409) {
@@ -38,8 +45,9 @@ export function useTaskRunner(taskId: string | null) {
   };
 
   const stop = async () => {
-    if (!activeJobId) return;
-    await fetch(`/api/run/stop/${activeJobId}`, { method: 'POST' });
+    const jobId = activeJobId ?? currentJob?.jobId;
+    if (!jobId) return;
+    await fetch(`/api/run/stop/${jobId}`, { method: 'POST' });
   };
 
   const clear = () => {

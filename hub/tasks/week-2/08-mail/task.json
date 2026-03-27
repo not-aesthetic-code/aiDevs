@@ -1,0 +1,9 @@
+{
+  "label": "Mailbox",
+  "description": "Agent searches a live email inbox to extract: attack date, employee password, and SEC- confirmation code, then submits to the hub.",
+  "type": "run-once",
+  "steps": [
+    { "id": "search", "label": "Search & extract",  "detail": "Agent calls zmail API to find relevant emails and extract the three values", "usesLLM": true,  "icon": "🔍" },
+    { "id": "submit", "label": "Submit to hub",     "detail": "POST password, date, and confirmation_code to /verify",                    "usesLLM": false, "icon": "📤" }
+  ]
+}

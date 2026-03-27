@@ -19,7 +19,7 @@ app.post('/:taskId', async (c) => {
   const jobId = randomUUID();
   const job = createJob(jobId, taskId);
 
-  runTask(job, task.script, body?.modelOverride);
+  runTask(job, task.script, body?.modelOverride, body?.stepModels);
 
   return c.json({ jobId });
 });

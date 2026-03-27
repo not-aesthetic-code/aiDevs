@@ -7,6 +7,7 @@ interface JobStore {
   startJob: (taskId: string, jobId: string) => void;
   appendLog: (taskId: string, line: LogLine) => void;
   addFlag: (taskId: string, flag: string) => void;
+  setTokenCount: (taskId: string, count: number) => void;
   finishJob: (taskId: string, exitCode: number) => void;
   clearJob: (taskId: string) => void;
 }
@@ -19,6 +20,7 @@ const defaultJob = (taskId: string): JobState => ({
   flags: [],
   exitCode: null,
   startedAt: null,
+  tokenCount: null,
 });
 
 export const useJobStore = create<JobStore>()(
@@ -38,6 +40,7 @@ export const useJobStore = create<JobStore>()(
               flags: [],
               exitCode: null,
               startedAt: Date.now(),
+              tokenCount: null,
             },
           },
         })),
@@ -54,6 +57,12 @@ export const useJobStore = create<JobStore>()(
           const job = s.jobs[taskId] ?? defaultJob(taskId);
           if (job.flags.includes(flag)) return s;
           return { jobs: { ...s.jobs, [taskId]: { ...job, flags: [...job.flags, flag] } } };
+        }),
+
+      setTokenCount: (taskId, count) =>
+        set((s) => {
+          const job = s.jobs[taskId] ?? defaultJob(taskId);
+          return { jobs: { ...s.jobs, [taskId]: { ...job, tokenCount: count } } };
         }),
 
       finishJob: (taskId, exitCode) =>
