@@ -1,0 +1,10 @@
+{
+  "label": "Sensor Anomalies",
+  "description": "Analyzes 10,000 sensor JSON files for anomalies: out-of-range values, wrong sensor type fields, and incorrect operator notes (LLM-powered note verification).",
+  "type": "run-once",
+  "steps": [
+    { "id": "load", "label": "Load & validate data", "detail": "Reads all JSON files and checks sensor readings programmatically against valid ranges and sensor type constraints", "usesLLM": false, "icon": "📂" },
+    { "id": "analyze", "label": "Analyze operator notes", "detail": "De-duplicates unique operator notes and batches them through LLM to detect false alarms (notes claiming errors when data is clean)", "usesLLM": true, "icon": "🔍" },
+    { "id": "submit", "label": "Submit to hub", "detail": "Sends all anomalous file IDs to /verify as recheck array", "usesLLM": false, "icon": "📤" }
+  ]
+}

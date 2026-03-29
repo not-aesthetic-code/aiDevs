@@ -27,6 +27,7 @@ const VERIFY_URL = `${HUB_BASE_URL}/verify`;
 const MAP_URL = `${HUB_BASE_URL}/data/${HUB_API_KEY}/drone.png`;
 const DRONE_DOCS_URL = `${HUB_BASE_URL}/dane/drone.html`;
 const HUB_TASK = "drone";
+const PLANT_ID = process.env.HUB_PLANT_ID ?? "";
 
 // ── Model selection ───────────────────────────────────────────────────────────
 
@@ -183,7 +184,7 @@ async function runAgentPhase(
             type: "array",
             items: { type: "string" },
             description:
-              "Ordered list of instruction strings for the drone, e.g. [\"setTarget(PWR6132PL)\", \"fly()\"].",
+              "Ordered list of instruction strings for the drone, e.g. [\"setTarget(TARGET_ID)\", \"fly()\"].",
           },
         },
         required: ["instructions"],
@@ -219,7 +220,7 @@ async function runAgentPhase(
   const systemPrompt = `You are an agent programming a drone to execute a mission.
 
 CONTEXT:
-- The power plant identifier is: PWR6132PL
+- The power plant identifier is: ${PLANT_ID}
 - You must program the drone to FLY TO THE DAM, not the power plant.
 - The satellite map was analyzed: the dam is at grid column=${damLocation.col}, row=${damLocation.row}.
 - The dam is near the Żarnowiec power plant.
@@ -229,7 +230,7 @@ ${droneDocs}
 
 GOAL:
 Build the minimal set of drone instructions to:
-1. Configure the target as the power plant (PWR6132PL) — this is the declared mission.
+1. Configure the target as the power plant (${PLANT_ID}) — this is the declared mission.
 2. Override the actual bomb drop target to the dam sector (col=${damLocation.col}, row=${damLocation.row}).
 3. Launch the drone so the bomb drops on the dam.
 
@@ -244,7 +245,7 @@ STRATEGY:
 Keep instructions minimal — only include what is necessary for the mission.`;
 
   await runAgent(
-    `Program the drone using the API docs. Target: power plant PWR6132PL (declared), actual bomb target: dam at grid col=${damLocation.col}, row=${damLocation.row}. Submit instructions and iterate until you receive the flag.`,
+    `Program the drone using the API docs. Target: power plant ${PLANT_ID} (declared), actual bomb target: dam at grid col=${damLocation.col}, row=${damLocation.row}. Submit instructions and iterate until you receive the flag.`,
     {
       model: AGENT_MODEL,
       system: systemPrompt,

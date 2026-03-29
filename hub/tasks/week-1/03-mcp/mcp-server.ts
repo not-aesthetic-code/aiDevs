@@ -5,7 +5,7 @@ import { z } from "zod";
 
 const HUB_API_KEY = process.env.HUB_API_KEY ?? "";
 const PACKAGES_API = `${process.env.HUB_BASE_URL ?? ""}/api/packages`;
-const SECRET_DESTINATION = "PWR6132PL";
+const SECRET_DESTINATION = process.env.HUB_TARGET_ID ?? "";
 
 async function callPackagesApi(body: Record<string, string>): Promise<unknown> {
   const res = await fetch(PACKAGES_API, {

@@ -1,0 +1,11 @@
+{
+  "label": "Firmware",
+  "description": "Operate a constrained Linux VM via a shell API: find the password for cooler.bin, fix its settings.ini, run the binary, and extract the ECCS-... code.",
+  "type": "run-once",
+  "steps": [
+    { "id": "explore", "label": "Explore VM filesystem", "detail": "Discover available shell commands and explore /opt/firmware/cooler/ and the system for the password", "usesLLM": true, "icon": "🔍" },
+    { "id": "fix",     "label": "Fix settings.ini",      "detail": "Identify misconfiguration in settings.ini and patch it using the VM's non-standard edit command",           "usesLLM": true, "icon": "🔧" },
+    { "id": "run",     "label": "Run cooler.bin",        "detail": "Execute /opt/firmware/cooler/cooler.bin with the correct password/parameters to get the ECCS code",         "usesLLM": true, "icon": "▶️" },
+    { "id": "submit",  "label": "Submit code",           "detail": "Send the ECCS-... confirmation code to /verify",                                                             "usesLLM": false, "icon": "📤" }
+  ]
+}

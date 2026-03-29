@@ -29,7 +29,7 @@ async function fetchCSV(): Promise<Item[]> {
 
 async function resetBudget(): Promise<boolean> {
   try {
-    const response = await fetch("${process.env.HUB_BASE_URL ?? ""}/verify", {
+    const response = await fetch(`${process.env.HUB_BASE_URL ?? ""}/verify`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ apikey: HUB_API_KEY, task: "categorize", answer: { prompt: "reset" } }),
@@ -44,7 +44,7 @@ async function resetBudget(): Promise<boolean> {
 async function verifyItem(code: string, description: string, prompt: string): Promise<{ success: boolean; message?: string; budgetExhausted?: boolean; flag?: string }> {
   const fullPrompt = prompt.replace("{code}", code).replace("{description}", description);
   try {
-    const response = await fetch("${process.env.HUB_BASE_URL ?? ""}/verify", {
+    const response = await fetch(`${process.env.HUB_BASE_URL ?? ""}/verify`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ apikey: HUB_API_KEY, task: "categorize", answer: { prompt: fullPrompt } }),
