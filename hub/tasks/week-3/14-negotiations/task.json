@@ -1,0 +1,11 @@
+{
+  "label": "Negotiations",
+  "description": "Serve a public HTTP tool that lets an external agent find which Polish cities sell specific electronics components needed for a wind turbine.",
+  "type": "server",
+  "steps": [
+    { "id": "load",     "label": "Load CSV data",      "detail": "Download and parse cities.csv, items.csv, and connections.csv from the hub data endpoint",              "usesLLM": false, "icon": "📥" },
+    { "id": "serve",    "label": "Start HTTP server",  "detail": "Listen for POST /search requests from the external agent on NEGOTIATIONS_PORT (default 3002)",           "usesLLM": false, "icon": "🌐" },
+    { "id": "register", "label": "Register tools",     "detail": "Submit the public tool URL and description to the hub via hubVerify so the external agent can find it",   "usesLLM": false, "icon": "📤" },
+    { "id": "search",   "label": "Handle item queries","detail": "On each agent request, use LLM to extract Polish keywords and search items.csv for matching city lists",  "usesLLM": true,  "icon": "🔍" }
+  ]
+}

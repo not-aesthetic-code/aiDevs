@@ -1,0 +1,12 @@
+{
+  "label": "SaveThem",
+  "description": "Plan the optimal route for a messenger to reach the city of Skolwin on a 10×10 terrain grid within fuel and food limits.",
+  "type": "run-once",
+  "steps": [
+    { "id": "discover", "label": "Discover tools",      "detail": "Use toolsearch to find map, vehicle, and movement-rules tools",                   "usesLLM": false, "icon": "🔍" },
+    { "id": "fetch",    "label": "Fetch data",          "detail": "Call discovered tools to get raw map, vehicle list, and terrain rules",           "usesLLM": false, "icon": "📥" },
+    { "id": "extract",  "label": "Extract structure",   "detail": "Use LLM to parse raw JSON into typed MapGrid, Vehicle[], and MovementRules",      "usesLLM": true,  "icon": "🧠" },
+    { "id": "pathfind", "label": "BFS pathfinding",     "detail": "Run BFS over (row, col, fuel, food, onFoot) state space for each vehicle",        "usesLLM": false, "icon": "🗺️" },
+    { "id": "submit",   "label": "Submit route",        "detail": "POST optimal [vehicle, dir, dir, ...] answer to /verify as task savethem",        "usesLLM": false, "icon": "📤" }
+  ]
+}

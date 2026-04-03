@@ -3,8 +3,8 @@
   "description": "Navigate a transport robot across a 7×5 reactor map from left to right without being crushed by vertically moving reactor blocks.",
   "type": "run-once",
   "steps": [
-    { "id": "start",    "label": "Start game",          "detail": "Send 'start' command to initialise the reactor session and receive the initial map state",              "usesLLM": false, "icon": "▶️" },
-    { "id": "navigate", "label": "Navigate to goal",    "detail": "Iteratively send right/wait/left commands based on simulated block positions until robot reaches col 7", "usesLLM": false, "icon": "🤖" },
-    { "id": "submit",   "label": "Receive confirmation","detail": "API confirms task completion once robot reaches the goal (col 7, row 5) without being crushed",         "usesLLM": false, "icon": "📤" }
+    { "id": "start",    "label": "Start game",        "detail": "Send 'start' command to initialise the reactor session and receive the initial map state",                                          "usesLLM": false, "icon": "▶️" },
+    { "id": "navigate", "label": "AI agent navigates","detail": "LLM agent uses simulate_command to preview moves and send_command to act, reasoning about block positions until the robot reaches col 7", "usesLLM": true,  "icon": "🤖" },
+    { "id": "submit",   "label": "Receive confirmation","detail": "API confirms task completion once robot reaches the goal (col 7, row 5) without being crushed",                                   "usesLLM": false, "icon": "📤" }
   ]
 }

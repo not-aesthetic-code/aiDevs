@@ -1,0 +1,12 @@
+{
+  "label": "OKO Editor",
+  "description": "Modify OKO Operational Centre records via the hub API: reclassify the Skolwin incident as animals, mark its task done, and plant a false Komarowo human-movement incident.",
+  "type": "run-once",
+  "steps": [
+    { "id": "help",     "label": "Fetch API help",            "detail": "Call action=help to discover available commands and syntax",                                     "usesLLM": false, "icon": "📖" },
+    { "id": "incident", "label": "Reclassify Skolwin",         "detail": "Update incydenty record to MOVE04 (animals) — was MOVE03 (vehicle+people)",                    "usesLLM": false, "icon": "🐾" },
+    { "id": "task",     "label": "Complete Skolwin task",      "detail": "Mark zadania record done=YES with content 'bobry' to close the Skolwin investigation",          "usesLLM": false, "icon": "✅" },
+    { "id": "komarowo", "label": "Plant Komarowo incident",    "detail": "Update an existing incydenty entry to MOVE01 with Komarowo city to redirect operator attention", "usesLLM": false, "icon": "🎭" },
+    { "id": "done",     "label": "Verify and get flag",        "detail": "Call action=done to verify all changes and receive the completion flag",                        "usesLLM": false, "icon": "🏁" }
+  ]
+}

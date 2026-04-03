@@ -12,16 +12,16 @@
  * Each reactor block occupies 2 rows and moves vertically (up/down) cyclically.
  * Blocks only move when a command is issued.
  *
- * Algorithm:
- *   1. Send "start"
- *   2. Simulate what happens to blocks after each possible command
- *   3. Move right if future right column is safe
- *   4. Wait if right is unsafe but current column stays safe
- *   5. Move left if current column also becomes unsafe
+ * Algorithm (AI agent):
+ *   1. Send "start" to initialise the game
+ *   2. Pass the board state to an LLM agent
+ *   3. Agent uses simulate_command to preview moves, send_command to act
+ *   4. Agent drives the loop until the robot reaches col=7
  */
 
 import "dotenv/config";
-import { HUB_API_KEY, hubVerify } from "../../shared/hub.js";
+import { hubVerify } from "../../shared/hub.js";
+import { runAgent, type ToolDef } from "../../shared/tool-agent.js";
 
 const TASK = "reactor";
 
@@ -184,82 +184,199 @@ function isSafe(col: number, row: number, blocks: Block[]): boolean {
   );
 }
 
-// ── Decision logic ────────────────────────────────────────────────────────────
+// ── Deterministic navigator (kept as reference — no LLM needed for this!) ────
+//
+// function decideCommand(state: State): Command {
+//   const { robotCol, blocks } = state;
+//   const futureBlocks = simulateBlocks(blocks);
+//   const rightCol = robotCol + 1;
+//
+//   // Try to move right
+//   if (rightCol <= GOAL_COL && isSafe(rightCol, ROBOT_ROW, futureBlocks)) {
+//     return "right";
+//   }
+//   // Stay and wait if current position is safe
+//   if (isSafe(robotCol, ROBOT_ROW, futureBlocks)) {
+//     return "wait";
+//   }
+//   // Retreat left if current column also becomes unsafe
+//   if (robotCol > MIN_COL) {
+//     return "left";
+//   }
+//   // Nowhere to go — wait and hope (edge case)
+//   return "wait";
+// }
 
-function decideCommand(state: State): Command {
-  const { robotCol, blocks } = state;
-  const futureBlocks = simulateBlocks(blocks);
+// ── Board rendering ───────────────────────────────────────────────────────────
 
-  const rightCol = robotCol + 1;
+function renderBoard(state: State): string {
+  const grid: string[][] = Array.from({ length: 5 }, () => Array(7).fill("."));
 
-  // Try to move right
-  if (rightCol <= GOAL_COL && isSafe(rightCol, ROBOT_ROW, futureBlocks)) {
-    return "right";
+  for (const b of state.blocks) {
+    for (let r = b.topRow; r < b.topRow + BLOCK_HEIGHT; r++) {
+      if (r >= 0 && r < 5 && b.col >= 0 && b.col < 7) {
+        grid[r][b.col] = "B";
+      }
+    }
   }
-  // Stay and wait if current position is safe
-  if (isSafe(robotCol, ROBOT_ROW, futureBlocks)) {
-    return "wait";
+
+  grid[ROBOT_ROW][GOAL_COL] = "G";
+
+  if (state.robotCol >= 0 && state.robotCol < 7) {
+    grid[ROBOT_ROW][state.robotCol] = "P";
   }
-  // Retreat left if current column also becomes unsafe
-  if (robotCol > MIN_COL) {
-    return "left";
-  }
-  // Nowhere to go — wait and hope (edge case)
-  return "wait";
+
+  const header = "     C1 C2 C3 C4 C5 C6 C7";
+  const rows = grid.map((row, i) => `Row ${i + 1}: ${row.join("  ")}`).join("\n");
+  return `${header}\n${rows}\nRobot at col=${state.robotCol + 1} (1-indexed). Goal: col=7, row=5.`;
 }
+
+// ── System prompt ─────────────────────────────────────────────────────────────
+
+const SYSTEM_PROMPT = `You are controlling a transport robot navigating a 7×5 reactor grid.
+
+GRID RULES:
+- Columns 1–7 (left→right), rows 1–5 (top→bottom)
+- P = robot (starts at col=1, row=5)
+- G = goal (col=7, row=5)
+- B = reactor block (2 rows tall, moves vertically, bounces at top/bottom edges)
+- Blocks move by exactly 1 row every time ANY command is issued (including "wait")
+- You are CRUSHED (game over) if a block occupies your position after a command
+
+AVAILABLE COMMANDS:
+- "right" — move robot one column to the right (robot AND blocks move)
+- "left"  — move robot one column to the left  (robot AND blocks move)
+- "wait"  — robot stays in place, blocks still move
+
+STRATEGY:
+1. Call simulate_command first to preview what the board looks like after a move
+2. Prefer moving right whenever the destination is safe
+3. Wait if right would be dangerous but staying is safe
+4. Move left only if your current position becomes unsafe
+
+Use simulate_command to check safety before committing. Use send_command to actually move.
+The task is complete when the robot reaches col=7.`;
+
+// ── Tool definitions ──────────────────────────────────────────────────────────
+
+const TOOLS: ToolDef[] = [
+  {
+    name: "simulate_command",
+    description:
+      "Preview what the board will look like after issuing a command, WITHOUT actually sending it to the API. Returns predicted robot position, block positions, and whether the robot would be safe.",
+    parameters: {
+      type: "object",
+      properties: {
+        command: {
+          type: "string",
+          enum: ["left", "right", "wait"],
+          description: "The command to simulate",
+        },
+      },
+      required: ["command"],
+    },
+  },
+  {
+    name: "send_command",
+    description:
+      "Send a command to the reactor API. Blocks will move. Returns the new board state or game-over message.",
+    parameters: {
+      type: "object",
+      properties: {
+        command: {
+          type: "string",
+          enum: ["left", "right", "wait"],
+          description: "The command to execute",
+        },
+      },
+      required: ["command"],
+    },
+  },
+];
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 
-async function main() {
-  console.log("=== Reactor Task ===");
+export async function main() {
+  console.log("=== Reactor Task (AI Agent) ===");
   console.log(`Hub: ${process.env.HUB_BASE_URL ?? "(HUB_BASE_URL not set)"}`);
   console.log("");
 
   // Initialise game
-  let raw = await sendCommand("start");
-  let state = parseState(raw);
+  const raw = await sendCommand("start");
+  let currentState = parseState(raw);
 
-  if (state.done) {
-    console.log(state.won ? "[Done] Already at goal." : "[Error] Game over immediately.");
+  if (currentState.done) {
+    console.log(currentState.won ? "[Done] Already at goal." : "[Error] Game over immediately.");
     return;
   }
 
-  console.log(`[Init] Robot at col=${state.robotCol}, blocks=${state.blocks.length}`);
-  console.log(`       Blocks: ${JSON.stringify(state.blocks)}`);
+  console.log(`[Init] Robot at col=${currentState.robotCol + 1}, blocks=${currentState.blocks.length}`);
+  console.log(renderBoard(currentState));
+  console.log("");
 
-  let steps = 0;
-  const MAX_STEPS = 300;
+  await runAgent(
+    `Navigate the robot to col=7 (the goal). Here is the current board:\n\n${renderBoard(currentState)}`,
+    {
+      model: "claude-sonnet-4-6",
+      system: SYSTEM_PROMPT,
+      tools: TOOLS,
+      maxIterations: 150,
+      onText: (text) => console.log(`[Agent] ${text}`),
+      onToolCall: (name, args) => console.log(`[Tool] ${name}(${JSON.stringify(args)})`),
+      onToolResult: (name, result) => console.log(`[Result/${name}] ${result.slice(0, 300)}`),
+    },
+    async (name, args) => {
+      const cmd = args.command as "left" | "right" | "wait";
 
-  while (!state.done && steps < MAX_STEPS) {
-    steps++;
-    const cmd = decideCommand(state);
-    console.log(
-      `[Step ${steps}] col=${state.robotCol} → ${cmd}` +
-        (state.blocks.length
-          ? `  (blocks: ${state.blocks.map((b) => `c${b.col}r${b.topRow}${b.direction[0]}`).join(" ")})`
-          : "")
-    );
+      if (name === "simulate_command") {
+        const futureBlocks = simulateBlocks(currentState.blocks);
+        const futureRobotCol =
+          cmd === "right" ? currentState.robotCol + 1
+          : cmd === "left"  ? currentState.robotCol - 1
+          : currentState.robotCol;
 
-    raw = await sendCommand(cmd);
-    state = parseState(raw);
+        const clampedCol = Math.max(MIN_COL, Math.min(GOAL_COL, futureRobotCol));
+        const safe = isSafe(clampedCol, ROBOT_ROW, futureBlocks);
 
-    if (state.done) break;
-    if (state.robotCol >= GOAL_COL) {
-      console.log("[Nav] Reached goal column — waiting for API confirmation…");
+        // Build a preview board from simulated state
+        const previewState: State = {
+          robotCol: clampedCol,
+          blocks: futureBlocks,
+          done: false,
+          won: false,
+          raw: null,
+        };
+
+        return JSON.stringify({
+          command: cmd,
+          robotColAfter: clampedCol + 1, // 1-indexed for LLM readability
+          safe,
+          preview: renderBoard(previewState),
+          blocks: futureBlocks.map((b) => ({
+            col: b.col + 1,
+            topRow: b.topRow + 1,
+            direction: b.direction,
+          })),
+        });
+      }
+
+      if (name === "send_command") {
+        const apiRaw = await sendCommand(cmd);
+        currentState = parseState(apiRaw);
+
+        if (currentState.won) {
+          return `SUCCESS! Robot reached the goal at col=7. Task complete.\nResponse: ${JSON.stringify(apiRaw)}`;
+        }
+        if (currentState.done) {
+          return `GAME OVER — robot was crushed! Response: ${JSON.stringify(apiRaw)}`;
+        }
+
+        return `OK. New board:\n${renderBoard(currentState)}`;
+      }
+
+      return "Unknown tool";
     }
-  }
-
-  if (state.won) {
-    console.log("\n[Done] Task completed successfully!");
-    console.log("Response:", JSON.stringify(state.raw, null, 2));
-  } else if (steps >= MAX_STEPS) {
-    console.error(`\n[Error] Exceeded ${MAX_STEPS} steps without completion.`);
-    process.exit(1);
-  } else {
-    console.error("\n[Error] Robot was crushed or game over.");
-    console.error("Last response:", JSON.stringify(state.raw, null, 2));
-    process.exit(1);
-  }
+  );
 }
 
 main().catch((err) => {
