@@ -1,0 +1,13 @@
+{
+  "label": "Food Warehouse",
+  "description": "Prepare delivery orders for 8 cities: discover creator and destination data from SQLite, generate SHA1 signatures, create and populate one order per city.",
+  "type": "run-once",
+  "steps": [
+    { "id": "help",        "label": "Fetch API help",         "detail": "Call tool=help to understand the warehouse API surface",                                         "usesLLM": false, "icon": "📖" },
+    { "id": "load",        "label": "Load city requirements", "detail": "Download food4cities.json — lists goods and quantities needed by each of the 8 cities",           "usesLLM": false, "icon": "📦" },
+    { "id": "db",          "label": "DB discovery",           "detail": "Query SQLite (show tables + select *) to find creator ID and city destination codes",             "usesLLM": false, "icon": "🗄️" },
+    { "id": "reset",       "label": "Reset state",            "detail": "Call tool=reset to clear any previous orders and start from a clean slate",                       "usesLLM": false, "icon": "♻️" },
+    { "id": "orders",      "label": "Create & fill orders",   "detail": "Per city: generate SHA1 signature → create order → batch-append all required items",             "usesLLM": false, "icon": "📋" },
+    { "id": "done",        "label": "Verify & get flag",      "detail": "Call tool=done — hub validates all orders match city requirements and returns the flag",           "usesLLM": false, "icon": "🏁" }
+  ]
+}

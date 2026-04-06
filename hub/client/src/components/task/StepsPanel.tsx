@@ -2,20 +2,23 @@ import React from 'react';
 import type { TaskDef } from '../../types.ts';
 import { useSettingsStore } from '../../store/useSettingsStore.ts';
 
-// Models available for step overrides (OpenRouter)
-const OR_MODELS = [
-  // Vision-capable
-  { label: 'GPT-4o ★ vision (recommended for grids)', value: 'openai/gpt-4o' },
+// Models available for step overrides
+const STEP_MODELS = [
+  // ── Anthropic native (direct API, no OpenRouter) ──────────────────────────
+  { label: '── Anthropic (direct) ──', value: '', disabled: true },
+  { label: 'Haiku 4.5 — fast & cheap', value: 'claude-haiku-4-5-20251001' },
+  { label: 'Sonnet 4.6 — balanced', value: 'claude-sonnet-4-6' },
+  { label: 'Opus 4.6 — most capable', value: 'claude-opus-4-6' },
+  // ── OpenRouter ─────────────────────────────────────────────────────────────
+  { label: '── OpenRouter ──', value: '', disabled: true },
+  { label: 'GPT-4o ★ vision', value: 'openai/gpt-4o' },
   { label: 'GPT-4o mini (vision)', value: 'openai/gpt-4o-mini' },
   { label: 'Gemini 2.0 Flash (vision)', value: 'google/gemini-2.0-flash-001' },
   { label: 'Gemini 3 Flash (vision)', value: 'google/gemini-3-flash-preview' },
   { label: 'Gemini Flash 1.5 (vision)', value: 'google/gemini-flash-1.5' },
-  { label: 'Claude Haiku 4.5 (vision)', value: 'anthropic/claude-haiku-4-5' },
-  { label: 'Claude Sonnet 4.5 (vision)', value: 'anthropic/claude-sonnet-4-5' },
-  // Text-only / agent
-  { label: 'Claude Haiku 4.5', value: 'anthropic/claude-haiku-4-5-20251001' },
-  { label: 'Claude Sonnet 4.5', value: 'anthropic/claude-sonnet-4-5-20251022' },
-  { label: 'Claude Sonnet 4.6', value: 'anthropic/claude-sonnet-4-6' },
+  { label: 'Claude Haiku 4.5 via OR', value: 'anthropic/claude-haiku-4-5' },
+  { label: 'Claude Sonnet 4.5 via OR', value: 'anthropic/claude-sonnet-4-5' },
+  { label: 'Claude Sonnet 4.6 via OR', value: 'anthropic/claude-sonnet-4-6' },
 ];
 
 interface Props {
@@ -56,8 +59,8 @@ export function StepsPanel({ task, stepModels, onModelChange }: Props) {
                     focus:outline-none focus:border-[#89b4fa]/60 cursor-pointer"
                 >
                   <option value="">Default ({defaultModel.split('/').pop()})</option>
-                  {OR_MODELS.map((m) => (
-                    <option key={m.value} value={m.value}>{m.label}</option>
+                  {STEP_MODELS.map((m, i) => (
+                    <option key={`${m.value}-${i}`} value={m.value} disabled={m.disabled}>{m.label}</option>
                   ))}
                 </select>
               ) : (

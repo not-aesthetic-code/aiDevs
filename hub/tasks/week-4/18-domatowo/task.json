@@ -1,0 +1,11 @@
+{
+  "label": "Domatowo",
+  "description": "AI agent searches ruined city for a wounded partisan: deploys scouts via transporters, inspects tall buildings, and calls a rescue helicopter when found — all within a 300-point budget.",
+  "type": "run-once",
+  "steps": [
+    { "id": "recon",    "label": "Map Reconnaissance",   "detail": "Fetch help docs and the 11×11 city map; AI identifies the tallest building clusters",              "usesLLM": true,  "icon": "🗺️" },
+    { "id": "deploy",   "label": "Deploy Units",          "detail": "AI plans and creates transporters with scouts, balancing creation costs against the 300-pt budget", "usesLLM": true,  "icon": "🚛" },
+    { "id": "search",   "label": "Search & Inspect",      "detail": "Transporters move along streets; scouts dismount and inspect tall-building fields for the partisan", "usesLLM": true,  "icon": "🔍" },
+    { "id": "evacuate", "label": "Call Helicopter",        "detail": "Once a scout finds the partisan, agent calls the rescue helicopter to that location",              "usesLLM": true,  "icon": "🚁" }
+  ]
+}

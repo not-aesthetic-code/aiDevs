@@ -1,0 +1,35 @@
+{
+  "label": "Radiomonitoring",
+  "description": "Intercept radio signals (text transcriptions and binary attachments), extract intelligence about the city known as 'Syjon', and transmit a final report.",
+  "type": "run-once",
+  "steps": [
+    {
+      "id": "start",
+      "label": "Start session",
+      "detail": "Open a monitoring session with the hub to prepare the signal pool",
+      "usesLLM": false,
+      "icon": "📡"
+    },
+    {
+      "id": "listen",
+      "label": "Collect signals",
+      "detail": "Repeatedly call listen until hub signals enough data; route each response: decode text locally, parse JSON, run vision on images, skip noise and audio",
+      "usesLLM": false,
+      "icon": "🎙️"
+    },
+    {
+      "id": "analyze",
+      "label": "AI analysis",
+      "detail": "LLM analyses all collected transcriptions and decoded attachments to extract cityName, cityArea, warehousesCount, and phoneNumber",
+      "usesLLM": true,
+      "icon": "🤖"
+    },
+    {
+      "id": "transmit",
+      "label": "Transmit report",
+      "detail": "Send the final intelligence report to the hub for verification",
+      "usesLLM": false,
+      "icon": "🏁"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "label": "Wind Power",
+  "description": "Schedule a wind turbine: protect blades during storms and enable power production at the optimal wind window, all within a 40-second service window.",
+  "type": "run-once",
+  "steps": [
+    { "id": "docs",       "label": "Fetch documentation",    "detail": "Get turbine specs (cutoff wind, pitch angles, yield table) directly from the API",                 "usesLLM": false, "icon": "📖" },
+    { "id": "start",      "label": "Open service window",    "detail": "Call start — begins the 40-second countdown",                                                       "usesLLM": false, "icon": "🔓" },
+    { "id": "fetch",      "label": "Queue data jobs",        "detail": "Fire weather + powerplantcheck + turbinecheck in parallel — each returns a queued job",             "usesLLM": false, "icon": "📡" },
+    { "id": "poll",       "label": "Drain result queue",     "detail": "Call getResult repeatedly until all 3 async jobs complete (up to 36s)",                            "usesLLM": false, "icon": "⏳" },
+    { "id": "analyze",    "label": "AI config analysis",     "detail": "LLM reads docs + weather + power requirements and decides storm-protection and production slots",   "usesLLM": true,  "icon": "🤖" },
+    { "id": "codes",      "label": "Generate unlock codes",  "detail": "Call unlockCodeGenerator sequentially for each config entry; collect via getResult",               "usesLLM": false, "icon": "🔑" },
+    { "id": "config",     "label": "Submit configuration",   "detail": "Send bulk config with pitchAngle, turbineMode, and unlockCode for each scheduled hour",            "usesLLM": false, "icon": "⚙️" },
+    { "id": "done",       "label": "Verify and get flag",    "detail": "Call done — hub validates the schedule and returns the flag if correct and within time limit",      "usesLLM": false, "icon": "🏁" }
+  ]
+}

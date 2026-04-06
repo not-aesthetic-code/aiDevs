@@ -2,9 +2,16 @@ import React, { useState } from 'react';
 import type { TaskDef } from '../../types.ts';
 import { useTaskRunner } from '../../hooks/useTaskRunner.ts';
 import { useJobStore } from '../../store/useJobStore.ts';
+import { useSettingsStore } from '../../store/useSettingsStore.ts';
 import { StepsPanel } from './StepsPanel.tsx';
 import { LogOutput } from './LogOutput.tsx';
 import { StatusBar } from './StatusBar.tsx';
+
+const ANTHROPIC_MODELS = [
+  { label: 'Haiku 4.5 — fast & cheap', value: 'claude-haiku-4-5-20251001' },
+  { label: 'Sonnet 4.6 — balanced', value: 'claude-sonnet-4-6' },
+  { label: 'Opus 4.6 — most capable', value: 'claude-opus-4-6' },
+];
 
 interface Props {
   task: TaskDef;
@@ -13,6 +20,8 @@ interface Props {
 export function TaskPanel({ task }: Props) {
   const [showServices, setShowServices] = useState(() => task.steps.some((s) => s.usesLLM));
   const [stepModels, setStepModels] = useState<Record<string, string>>({});
+  const [globalModel, setGlobalModel] = useState('');
+  const settings = useSettingsStore((s) => s.settings);
   const { run, stop, clear, currentJob } = useTaskRunner(task.id);
 
   const isRunning = currentJob?.status === 'running';
@@ -48,6 +57,24 @@ export function TaskPanel({ task }: Props) {
             <span>Services</span>
           </button>
 
+          <select
+            value={globalModel}
+            onChange={(e) => setGlobalModel(e.target.value)}
+            disabled={isRunning}
+            title="Global model override (MODEL_OVERRIDE)"
+            className="text-[11px] px-2 py-1.5 rounded bg-[#313244] text-[#89dceb] border border-[#89dceb]/20
+              focus:outline-none focus:border-[#89dceb]/60 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <option value="">
+              Model: {settings?.models.default
+                ? settings.models.default.split('/').pop()
+                : 'default'}
+            </option>
+            {ANTHROPIC_MODELS.map((m) => (
+              <option key={m.value} value={m.value}>{m.label}</option>
+            ))}
+          </select>
+
           <button
             onClick={clear}
             disabled={isRunning}
@@ -68,7 +95,7 @@ export function TaskPanel({ task }: Props) {
             </button>
           ) : (
             <button
-              onClick={() => run(undefined, stepModels)}
+              onClick={() => run(globalModel || undefined, stepModels)}
               className="flex items-center gap-1.5 px-4 py-1.5 rounded text-xs font-semibold
                 bg-[#a6e3a1]/15 text-[#a6e3a1] border border-[#a6e3a1]/40 hover:bg-[#a6e3a1]/25 transition-colors"
             >

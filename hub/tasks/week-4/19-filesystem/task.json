@@ -1,0 +1,12 @@
+{
+  "label": "Filesystem",
+  "description": "Analyse Natan's trade notes and build a virtual filesystem with cities, people, and goods directories.",
+  "type": "run-once",
+  "steps": [
+    { "id": "help",      "label": "Fetch API help",      "detail": "Call help action to discover available filesystem API operations",                              "usesLLM": false, "icon": "📖" },
+    { "id": "download",  "label": "Download notes",      "detail": "Download and extract natan_notes.zip from the hub",                                            "usesLLM": false, "icon": "📥" },
+    { "id": "analyze",   "label": "AI analysis",         "detail": "LLM reads all notes and extracts cities (needs+sells), people, and goods-for-sale",            "usesLLM": true,  "icon": "🤖" },
+    { "id": "build",     "label": "Build filesystem",    "detail": "Reset, then batch-create /miasta /osoby /towary directories and all files in one request",     "usesLLM": false, "icon": "🗂️" },
+    { "id": "done",      "label": "Verify and get flag", "detail": "Call done — hub validates the filesystem structure and returns the flag if correct",           "usesLLM": false, "icon": "🏁" }
+  ]
+}
