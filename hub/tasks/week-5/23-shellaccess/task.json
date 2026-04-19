@@ -1,0 +1,28 @@
+{
+  "label": "Shell Access",
+  "description": "Explore archive logs on a remote server via shell commands to find when and where Rafał was discovered, then submit the date (day before), city and coordinates.",
+  "type": "run-once",
+  "steps": [
+    {
+      "id": "explore",
+      "label": "Explore /data/",
+      "detail": "Agent lists and reads log files in /data/ on the remote server",
+      "usesLLM": true,
+      "icon": "🔍"
+    },
+    {
+      "id": "analyze",
+      "label": "AI Analysis",
+      "detail": "LLM identifies when/where Rafał was found and computes the one-day-earlier date",
+      "usesLLM": true,
+      "icon": "🤖"
+    },
+    {
+      "id": "submit",
+      "label": "Submit Answer",
+      "detail": "Echo the JSON answer to the remote server for automatic validation and flag retrieval",
+      "usesLLM": false,
+      "icon": "🏁"
+    }
+  ]
+}

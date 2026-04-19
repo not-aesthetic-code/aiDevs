@@ -13,31 +13,32 @@ html, body, #root {
 }
 
 body {
-  background: #1e1e2e;
-  color: #cdd6f4;
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  background: #F6F5F2;
+  color: #1C1A17;
+  font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #45475a;
+  background: #D4CFC4;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #6c7086;
+  background: #B0AA9F;
 }
 
 /* Smooth transitions */
 * {
-  transition-property: background-color, border-color, color, opacity;
-  transition-duration: 100ms;
+  transition-property: background-color, border-color, color, opacity, box-shadow;
+  transition-duration: 120ms;
   transition-timing-function: ease;
 }

@@ -15,14 +15,14 @@ export function Sidebar({ onOpenSettings }: Props) {
   const allFlags = Object.values(jobs).flatMap((j) => j.flags);
 
   return (
-    <aside className="w-64 shrink-0 flex flex-col bg-[#181825] border-r border-[#313244] h-full">
+    <aside className="w-60 shrink-0 flex flex-col bg-white border-r border-[#E5E1D8] h-full">
       {/* Header */}
-      <div className="px-3 pt-4 pb-2">
-        <p className="text-[10px] font-semibold uppercase tracking-widest text-[#6c7086]">Tasks</p>
+      <div className="px-4 pt-5 pb-3">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[#A39D94]">Tasks</p>
       </div>
 
       {/* Task list */}
-      <nav className="flex-1 overflow-y-auto py-1 space-y-1">
+      <nav className="flex-1 overflow-y-auto pb-2">
         {weeks.map((week) => (
           <WeekGroup
             key={week}
@@ -35,19 +35,19 @@ export function Sidebar({ onOpenSettings }: Props) {
       </nav>
 
       {/* Bottom nav */}
-      <div className="border-t border-[#313244] py-2 space-y-0.5">
+      <div className="border-t border-[#E5E1D8] py-1.5">
         <SidebarNavItem
-          icon="🏆"
-          label={`Flags ${allFlags.length > 0 ? `(${allFlags.length})` : ''}`}
+          icon="◆"
+          label={`Flags${allFlags.length > 0 ? ` (${allFlags.length})` : ''}`}
           onClick={() => {}}
         />
         <SidebarNavItem
-          icon="⚙️"
+          icon="◎"
           label="Settings"
           onClick={onOpenSettings}
         />
         <SidebarNavItem
-          icon="ℹ️"
+          icon="○"
           label="About"
           onClick={() => {}}
         />
@@ -60,9 +60,9 @@ function SidebarNavItem({ icon, label, onClick }: { icon: string; label: string;
   return (
     <button
       onClick={onClick}
-      className="w-full text-left flex items-center gap-2 px-3 py-1.5 text-xs text-[#6c7086] hover:text-[#cdd6f4] transition-colors"
+      className="w-full text-left flex items-center gap-2.5 px-4 py-2 text-[13px] text-[#A39D94] hover:text-[#1C1A17] hover:bg-[#F6F5F2] transition-colors"
     >
-      <span>{icon}</span>
+      <span className="text-[10px]">{icon}</span>
       <span>{label}</span>
     </button>
   );

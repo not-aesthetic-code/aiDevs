@@ -1,0 +1,42 @@
+{
+  "label": "Phonecall",
+  "description": "Conduct a multi-turn Polish audio conversation with a system operator to identify passable roads and disable monitoring for a covert transport.",
+  "type": "run-once",
+  "steps": [
+    {
+      "id": "start",
+      "label": "Start Session",
+      "detail": "Initiate conversation session with the hub operator system",
+      "usesLLM": false,
+      "icon": "📞"
+    },
+    {
+      "id": "introduce",
+      "label": "Introduction",
+      "detail": "Generate and send Polish audio introducing as Tymon Gajewski with authentication",
+      "usesLLM": false,
+      "icon": "🎙️"
+    },
+    {
+      "id": "road-inquiry",
+      "label": "Road Status Inquiry",
+      "detail": "Ask operator about status of RD224, RD472 and RD820 — mentioning Zygfryd transport",
+      "usesLLM": false,
+      "icon": "🛣️"
+    },
+    {
+      "id": "analyze",
+      "label": "AI Analysis",
+      "detail": "Transcribe operator audio response and identify which roads are passable",
+      "usesLLM": true,
+      "icon": "🤖"
+    },
+    {
+      "id": "disable-monitoring",
+      "label": "Disable Monitoring",
+      "detail": "Request monitoring to be disabled on passable roads citing secret food transport",
+      "usesLLM": false,
+      "icon": "🔕"
+    }
+  ]
+}

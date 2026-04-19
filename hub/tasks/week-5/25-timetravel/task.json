@@ -1,0 +1,42 @@
+{
+  "label": "Time Travel",
+  "description": "Operate the CHRONOS-P1 pocket time machine: execute a 3-jump sequence (2238 → 2026 → 2024 tunnel) by auto-configuring API params and guiding manual web UI steps.",
+  "type": "run-once",
+  "steps": [
+    {
+      "id": "init",
+      "label": "Init & Help",
+      "detail": "Call help and getConfig to understand current device state",
+      "usesLLM": false,
+      "icon": "📡"
+    },
+    {
+      "id": "jump1",
+      "label": "Jump 1 → 2238",
+      "detail": "Configure 5 Nov 2238 (PT-B, syncRatio=0.82, PWR=91); poll for internalMode 3",
+      "usesLLM": true,
+      "icon": "🔋"
+    },
+    {
+      "id": "jump2",
+      "label": "Jump 2 → 2026",
+      "detail": "Return to 10 Apr 2026 (PT-A, syncRatio=0.69, PWR=28); poll for internalMode 2",
+      "usesLLM": true,
+      "icon": "🏠"
+    },
+    {
+      "id": "jump3",
+      "label": "Jump 3 → Tunnel 2024",
+      "detail": "Open time tunnel to 12 Nov 2024 (PT-A+PT-B, syncRatio=0.54, PWR=19, ≥60% battery)",
+      "usesLLM": true,
+      "icon": "🌀"
+    },
+    {
+      "id": "verify",
+      "label": "Submit Flag",
+      "detail": "Hub returns flag on successful tunnel opening; submit to verify endpoint",
+      "usesLLM": false,
+      "icon": "🏁"
+    }
+  ]
+}

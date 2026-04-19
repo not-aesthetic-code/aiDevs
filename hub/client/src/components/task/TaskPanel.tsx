@@ -29,31 +29,31 @@ export function TaskPanel({ task }: Props) {
   const flags = currentJob?.flags ?? [];
 
   return (
-    <div className="flex flex-col h-full bg-[#1e1e2e]">
+    <div className="flex flex-col h-full bg-[#F6F5F2]">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[#313244] bg-[#181825] shrink-0">
+      <div className="flex items-center justify-between px-5 py-3 border-b border-[#E5E1D8] bg-white shrink-0">
         <div className="flex items-center gap-3">
-          <h1 className="text-sm font-semibold text-[#cdd6f4]">
-            <span className="text-[#6c7086] mr-2">{task.id}</span>
+          <h1 className="text-sm font-medium text-[#1C1A17]">
+            <span className="font-mono text-[11px] text-[#A39D94] mr-2">{task.id}</span>
             {task.label}
           </h1>
           {task.type === 'server' && (
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#cba6f7]/10 text-[#cba6f7] border border-[#cba6f7]/20">
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#F5F3FF] text-[#6D28D9] border border-[#DDD6FE] font-medium tracking-wide">
               server
             </span>
           )}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <button
             onClick={() => setShowServices((v) => !v)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs border transition-colors
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[12px] border transition-colors
               ${showServices
-                ? 'bg-[#cba6f7]/15 text-[#cba6f7] border-[#cba6f7]/40'
-                : 'bg-[#313244] text-[#a6adc8] border-[#45475a] hover:border-[#6c7086]'
+                ? 'bg-[#F5F3FF] text-[#6D28D9] border-[#DDD6FE]'
+                : 'bg-[#F6F5F2] text-[#6B665E] border-[#E5E1D8] hover:border-[#CCC8BF]'
               }`}
           >
-            <span>⚙</span>
+            <span className="text-[10px]">◎</span>
             <span>Services</span>
           </button>
 
@@ -62,13 +62,13 @@ export function TaskPanel({ task }: Props) {
             onChange={(e) => setGlobalModel(e.target.value)}
             disabled={isRunning}
             title="Global model override (MODEL_OVERRIDE)"
-            className="text-[11px] px-2 py-1.5 rounded bg-[#313244] text-[#89dceb] border border-[#89dceb]/20
-              focus:outline-none focus:border-[#89dceb]/60 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
+            className="text-[12px] px-2 py-1.5 rounded-md bg-[#F6F5F2] text-[#0369A1] border border-[#E5E1D8]
+              focus:outline-none focus:border-[#0369A1]/40 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <option value="">
-              Model: {settings?.models.default
+              {settings?.models.default
                 ? settings.models.default.split('/').pop()
-                : 'default'}
+                : 'default model'}
             </option>
             {ANTHROPIC_MODELS.map((m) => (
               <option key={m.value} value={m.value}>{m.label}</option>
@@ -78,8 +78,8 @@ export function TaskPanel({ task }: Props) {
           <button
             onClick={clear}
             disabled={isRunning}
-            className="px-3 py-1.5 rounded text-xs bg-[#313244] text-[#a6adc8] border border-[#45475a]
-              hover:border-[#6c7086] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="px-3 py-1.5 rounded-md text-[12px] bg-[#F6F5F2] text-[#6B665E] border border-[#E5E1D8]
+              hover:border-[#CCC8BF] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             Clear
           </button>
@@ -87,19 +87,19 @@ export function TaskPanel({ task }: Props) {
           {isRunning ? (
             <button
               onClick={stop}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded text-xs font-medium
-                bg-[#f38ba8]/15 text-[#f38ba8] border border-[#f38ba8]/40 hover:bg-[#f38ba8]/25 transition-colors"
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-md text-[12px] font-medium
+                bg-[#FEE2E2] text-[#DC2626] border border-[#FCA5A5] hover:bg-[#FEE2E2]/80 transition-colors"
             >
-              <span>⏹</span>
+              <span className="text-[9px]">■</span>
               <span>Stop</span>
             </button>
           ) : (
             <button
               onClick={() => run(globalModel || undefined, stepModels)}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded text-xs font-semibold
-                bg-[#a6e3a1]/15 text-[#a6e3a1] border border-[#a6e3a1]/40 hover:bg-[#a6e3a1]/25 transition-colors"
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-md text-[12px] font-medium
+                bg-[#1D4ED8] text-white border border-[#1D4ED8] hover:bg-[#1E40AF] transition-colors shadow-sm"
             >
-              <span>▶</span>
+              <span className="text-[9px]">▶</span>
               <span>Run</span>
             </button>
           )}
@@ -111,8 +111,8 @@ export function TaskPanel({ task }: Props) {
 
       {/* Description (shown when no log output) */}
       {logLines.length === 0 && (
-        <div className="px-4 py-3 border-b border-[#313244]/50 shrink-0">
-          <p className="text-xs text-[#6c7086]">{task.description}</p>
+        <div className="px-5 py-3 border-b border-[#E5E1D8]/60 shrink-0">
+          <p className="text-[13px] text-[#6B665E] leading-relaxed">{task.description}</p>
         </div>
       )}
 

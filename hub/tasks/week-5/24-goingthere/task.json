@@ -1,0 +1,49 @@
+{
+  "label": "Going There",
+  "description": "Navigate a rocket through a 3×12 grid to the base in Grudziądz: dodge rocks using AI-interpreted radio hints and disarm OKO radar traps along the way.",
+  "type": "run-once",
+  "steps": [
+    {
+      "id": "start",
+      "label": "Start Game",
+      "detail": "Send 'start' command to hub; parse target row from response with LLM",
+      "usesLLM": true,
+      "icon": "🚀"
+    },
+    {
+      "id": "scan",
+      "label": "Scan Frequency",
+      "detail": "GET /api/frequencyScanner before each move; parse distorted JSON response",
+      "usesLLM": false,
+      "icon": "📡"
+    },
+    {
+      "id": "disarm",
+      "label": "Disarm Radar",
+      "detail": "Compute SHA1(detectionCode + 'disarm') and POST to neutralise OKO trap",
+      "usesLLM": false,
+      "icon": "🛡️"
+    },
+    {
+      "id": "hint",
+      "label": "Radio Hint",
+      "detail": "POST /api/getmessage to receive rock position hint for the next column",
+      "usesLLM": false,
+      "icon": "📻"
+    },
+    {
+      "id": "navigate",
+      "label": "AI Navigation",
+      "detail": "LLM interprets nautical/directional hint and picks go/left/right avoiding the rock",
+      "usesLLM": true,
+      "icon": "🤖"
+    },
+    {
+      "id": "arrive",
+      "label": "Reach Grudziądz",
+      "detail": "After 11 moves the rocket arrives at column 12, target row — hub returns flag",
+      "usesLLM": false,
+      "icon": "🏁"
+    }
+  ]
+}

@@ -14,17 +14,17 @@ export function WeekGroup({ week, tasks, selectedTaskId, onSelect }: Props) {
   const hasSelected = tasks.some((t) => t.id === selectedTaskId);
 
   return (
-    <div>
+    <div className="mb-1">
       <button
         onClick={() => setOpen((v) => !v)}
-        className={`w-full text-left flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium uppercase tracking-widest
-          ${hasSelected ? 'text-[#89b4fa]' : 'text-[#6c7086]'} hover:text-[#a6adc8] transition-colors`}
+        className={`w-full text-left flex items-center gap-1.5 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.15em]
+          ${hasSelected ? 'text-[#1D4ED8]' : 'text-[#A39D94]'} hover:text-[#1C1A17] transition-colors`}
       >
-        <span className="text-[10px]">{open ? '▼' : '▶'}</span>
-        WEEK-{week}
+        <span className="opacity-60">{open ? '▾' : '▸'}</span>
+        Week {week}
       </button>
       {open && (
-        <div className="pl-1">
+        <div>
           {tasks.map((task) => (
             <TaskItem
               key={task.id}

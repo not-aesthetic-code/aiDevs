@@ -18,20 +18,20 @@ export default function App() {
   const selectedTask = tasks.find((t) => t.id === selectedTaskId);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#1e1e2e] font-mono">
+    <div className="flex h-screen overflow-hidden bg-[#F6F5F2]">
       <Sidebar onOpenSettings={() => setShowSettings(true)} />
 
       <main className="flex-1 overflow-hidden flex flex-col">
         {loading ? (
-          <div className="flex-1 flex items-center justify-center text-[#6c7086] text-xs">
+          <div className="flex-1 flex items-center justify-center text-[#A39D94] text-sm">
             Loading tasks…
           </div>
         ) : selectedTask ? (
           <TaskPanel key={selectedTask.id} task={selectedTask} />
         ) : (
-          <div className="flex-1 flex flex-col items-center justify-center text-[#6c7086] text-xs gap-2">
-            <span className="text-3xl">🤖</span>
-            <p>Select a task from the sidebar to begin.</p>
+          <div className="flex-1 flex flex-col items-center justify-center text-[#A39D94] text-sm gap-3">
+            <span className="text-4xl opacity-40">◎</span>
+            <p className="font-light tracking-wide">Select a task from the sidebar to begin.</p>
           </div>
         )}
       </main>

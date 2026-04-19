@@ -58,30 +58,30 @@ export function Settings({ onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="w-[480px] rounded-lg bg-[#181825] border border-[#313244] shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-[2px]">
+      <div className="w-[460px] rounded-xl bg-white border border-[#E5E1D8] shadow-xl shadow-black/8">
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-[#313244]">
-          <h2 className="text-sm font-semibold text-[#cdd6f4]">⚙️ Settings</h2>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#E5E1D8]">
+          <h2 className="text-[14px] font-semibold text-[#1C1A17]">Settings</h2>
           <button
             onClick={onClose}
-            className="text-[#6c7086] hover:text-[#cdd6f4] text-lg leading-none transition-colors"
+            className="w-6 h-6 flex items-center justify-center text-[#A39D94] hover:text-[#1C1A17] text-lg leading-none transition-colors rounded hover:bg-[#F6F5F2]"
           >
             ×
           </button>
         </div>
 
-        <div className="p-5 space-y-5">
+        <div className="p-6 space-y-6">
           {/* Default model */}
           <section>
-            <label className="block text-[10px] uppercase tracking-widest text-[#6c7086] mb-2 font-semibold">
+            <label className="block text-[10px] uppercase tracking-[0.15em] text-[#A39D94] mb-2 font-semibold">
               Default Model (Anthropic)
             </label>
             <select
               value={defaultModel}
               onChange={(e) => setDefaultModel(e.target.value)}
-              className="w-full bg-[#11111b] border border-[#313244] rounded px-3 py-2 text-xs text-[#cdd6f4]
-                focus:outline-none focus:border-[#89b4fa] transition-colors"
+              className="w-full bg-[#F6F5F2] border border-[#E5E1D8] rounded-lg px-3 py-2 text-[13px] text-[#1C1A17]
+                focus:outline-none focus:border-[#1D4ED8]/40 transition-colors"
             >
               {ANTHROPIC_MODELS.map((m) => (
                 <option key={m} value={m}>{m}</option>
@@ -93,21 +93,21 @@ export function Settings({ onClose }: Props) {
           <section>
             <div className="flex items-center justify-between mb-3">
               <div>
-                <label className="block text-[10px] uppercase tracking-widest text-[#6c7086] font-semibold">
+                <label className="block text-[10px] uppercase tracking-[0.15em] text-[#A39D94] font-semibold">
                   OpenRouter
                 </label>
-                <p className="text-[11px] text-[#45475a] mt-0.5">
-                  Use OpenRouter for model access — key read from <code className="text-[#6c7086]">OPENROUTER_API_KEY</code> in .env
+                <p className="text-[12px] text-[#A39D94] mt-1 leading-relaxed">
+                  Use OpenRouter for model access — key from <code className="font-mono text-[#6B665E] bg-[#F6F5F2] px-1 py-0.5 rounded text-[11px]">OPENROUTER_API_KEY</code>
                 </p>
               </div>
               <button
                 onClick={() => setUseOpenRouter((v) => !v)}
                 className={`relative w-10 h-5 rounded-full transition-colors shrink-0 ml-4 ${
-                  useOpenRouter ? 'bg-[#a6e3a1]' : 'bg-[#313244]'
+                  useOpenRouter ? 'bg-[#1D4ED8]' : 'bg-[#E5E1D8]'
                 }`}
               >
                 <span
-                  className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${
+                  className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${
                     useOpenRouter ? 'translate-x-5' : 'translate-x-0.5'
                   }`}
                 />
@@ -118,8 +118,8 @@ export function Settings({ onClose }: Props) {
               <select
                 value={orModel}
                 onChange={(e) => setOrModel(e.target.value)}
-                className="w-full bg-[#11111b] border border-[#313244] rounded px-3 py-2 text-xs text-[#cdd6f4]
-                  focus:outline-none focus:border-[#89b4fa] transition-colors"
+                className="w-full bg-[#F6F5F2] border border-[#E5E1D8] rounded-lg px-3 py-2 text-[13px] text-[#1C1A17]
+                  focus:outline-none focus:border-[#1D4ED8]/40 transition-colors"
               >
                 {OPENROUTER_MODELS.map((m) => (
                   <option key={m} value={m}>{m}</option>
@@ -130,18 +130,18 @@ export function Settings({ onClose }: Props) {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-2 px-5 py-4 border-t border-[#313244]">
+        <div className="flex items-center justify-end gap-2 px-6 py-4 border-t border-[#E5E1D8]">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded text-xs text-[#a6adc8] hover:text-[#cdd6f4] transition-colors"
+            className="px-4 py-2 rounded-lg text-[13px] text-[#6B665E] hover:text-[#1C1A17] hover:bg-[#F6F5F2] transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
             disabled={saving}
-            className="px-4 py-2 rounded text-xs font-medium bg-[#89b4fa]/15 text-[#89b4fa]
-              border border-[#89b4fa]/40 hover:bg-[#89b4fa]/25 disabled:opacity-50 transition-colors"
+            className="px-4 py-2 rounded-lg text-[13px] font-medium bg-[#1D4ED8] text-white
+              hover:bg-[#1E40AF] disabled:opacity-50 transition-colors shadow-sm"
           >
             {saving ? 'Saving…' : 'Save Settings'}
           </button>

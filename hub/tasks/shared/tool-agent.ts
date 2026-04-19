@@ -83,13 +83,30 @@ async function runAgentAnthropic(
   ];
 
   for (let i = 0; i < (opts.maxIterations ?? 30); i++) {
-    const response = await client.messages.create({
-      model: opts.model,
-      max_tokens: 4096,
-      system: opts.system,
-      tools,
-      messages,
-    });
+    // Retry on 429 / 529 overload with exponential backoff
+    let response: Anthropic.Message | undefined;
+    for (let attempt = 0; attempt < 6; attempt++) {
+      try {
+        response = await client.messages.create({
+          model: opts.model,
+          max_tokens: 4096,
+          system: opts.system,
+          tools,
+          messages,
+        });
+        break;
+      } catch (err: unknown) {
+        const status = (err as { status?: number }).status;
+        if ((status === 429 || status === 529) && attempt < 5) {
+          const wait = Math.min(2 ** attempt * 5000, 60000);
+          console.warn(`[Agent] Rate limit / overloaded (${status}), retrying in ${wait / 1000}s…`);
+          await new Promise((r) => setTimeout(r, wait));
+        } else {
+          throw err;
+        }
+      }
+    }
+    if (!response) throw new Error("Failed to get response after retries");
 
     messages.push({ role: "assistant", content: response.content });
 

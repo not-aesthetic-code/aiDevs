@@ -1,0 +1,17 @@
+- generic [ref=e1]:
+  - generic [ref=e7]:
+    - img "BRAVE Education" [ref=e8]
+    - heading "Log in to your account" [level=1] [ref=e9]
+    - generic [ref=e10]:
+      - generic [ref=e13]:
+        - generic [ref=e14]:
+          - generic [ref=e17] [cursor=pointer]: Email
+          - textbox "Email" [active] [ref=e19]
+        - generic [ref=e20]:
+          - generic [ref=e23] [cursor=pointer]: Password
+          - textbox "Password" [ref=e25]
+        - button "Sign In" [ref=e27] [cursor=pointer]
+      - link "Forgot your password?" [ref=e31] [cursor=pointer]:
+        - /url: /users/password/new?request_host=bravecourses.circle.so
+  - generic:
+    - region "Notifications"
