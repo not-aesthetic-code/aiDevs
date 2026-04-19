@@ -35,5 +35,5 @@ Modify records in the OKO Operational Centre system via a "back door" API endpoi
 ## Outcome
 
 - Verified successfully with `code: 0`.
-- Flag format: `[flag redacted]`.
+- Flag returned successfully.
 - Three `update` calls + one `done` call — no LLM required.

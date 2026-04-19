@@ -62,6 +62,6 @@ The hub returns the flag only after the monitoring is successfully disabled in a
 
 ## Outcome
 
-- Flag: `[flag redacted]`
+- Flag returned successfully
 - Successful conversation flow: intro (barbakan) → road status (RD820 passable) → disable request (Zygfryd) → password (long phrase with barbakan)
 - The hub returns code 0 with the flag embedded in the `message` field when the conversation succeeds.

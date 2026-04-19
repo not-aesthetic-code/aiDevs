@@ -30,7 +30,7 @@ No separate AI analysis step is needed after exploration because the same agent 
 
 ## Outcome
 
-- **Verified** — flag returned: `[flag redacted]`
+- **Verified** — flag returned successfully
 - Final answer:
   ```json
   { "date": "2024-11-12", "city": "Grudziądz", "longitude": 18.968774, "latitude": 53.432303 }

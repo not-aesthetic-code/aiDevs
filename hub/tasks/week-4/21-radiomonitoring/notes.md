@@ -50,6 +50,6 @@ Intercept a stream of radio signals from the hub (text transcriptions and Base64
 
 Final answer: `{ cityName: "Skarszewy", cityArea: "10.73", warehousesCount: 11, phoneNumber: "644122092" }`
 
-Flag received: `[flag redacted]`
+Flag received successfully.
 
 The retry loop was essential — Gemini transcribed "12" warehouses, the first transmit failed with -740, then the loop tried 11 and succeeded.
